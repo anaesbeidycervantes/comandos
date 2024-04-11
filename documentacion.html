@@ -103,7 +103,7 @@
             function ejecutarComando(comando) {
                 comando = comando.toLowerCase().trim();
                 switch (comando) {
-                    case 'regresar':
+                    case 'regresar al inicio':
                         window.location.href = 'pruebamockapi.html';
                         break;
                     default:
@@ -135,6 +135,7 @@
             if ('webkitSpeechRecognition' in window) {
                 const recognition = new webkitSpeechRecognition();
                 recognition.lang = 'es-ES';
+                recognition.continuous = true; // Mantener reconocimiento permanente
 
                 recognition.onresult = function (event) {
                     const transcript = event.results[0][0].transcript;
