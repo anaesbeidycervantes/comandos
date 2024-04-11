@@ -1,1 +1,2 @@
 
+Comando por voz
