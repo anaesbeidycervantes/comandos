@@ -1,32 +1,49 @@
 document.addEventListener('DOMContentLoaded', function () {
     const voiceResult = document.getElementById('voiceResult');
     let openedWindow;
+    let recognition;
+
+    function iniciarReconocimiento() {
+        recognition = new webkitSpeechRecognition();
+        recognition.lang = 'es-ES';
+        recognition.continuous = true; // Reconocimiento continuo
+
+        recognition.onresult = function (event) {
+            const transcript = event.results[event.results.length - 1][0].transcript; // Último resultado
+            voiceResult.textContent = 'Tu dijiste: ' + transcript;
+            ejecutarComando(transcript);
+        };
+
+        recognition.onerror = function (event) {
+            console.error('Error en el reconocimiento de voz: ' + event.error);
+        };
+
+        recognition.start(); // Iniciar el reconocimiento de voz
+    }
 
     function ejecutarComando(comando) {
         comando = comando.toLowerCase().trim();
         switch (comando) {
-            case 'abrir página':
+            case 'quiero abrir una página':
                 openedWindow = window.open('https://www.google.com');
                 break;
-            case 'ir a página':
+            case 've a netflix':
                 openedWindow = window.open('https://www.netflix.com');
                 break;
-            case 'abrir imagen':
+            case 'abre la imagen por favor':
                 openedWindow = window.open('https://upload.wikimedia.org/wikipedia/commons/thumb/5/58/Instituto_Tecnol%C3%B3gico_de_Pachuca._004.jpg/640px-Instituto_Tecnol%C3%B3gico_de_Pachuca._004.jpg');
                 break;
-            case 'cambiar tamaño':
+            case 'quiero cambiar el tamaño':
                 cambiarTamaño();
                 break;
-            case 'ver instrucciones':
+            case 'quiero ver las instrucciones':
                 window.location.href = 'documentacion.html';
                 break;
-            
-            default:
+            default:    
                 mostrarError();
                 break;
         }
         
-        // Envía el comando al MockAPI
         enviarComandoAMockAPI(comando);
     }
 
@@ -58,20 +75,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     if ('webkitSpeechRecognition' in window) {
-        const recognition = new webkitSpeechRecognition();
-        recognition.lang = 'es-ES';
-
-        recognition.onresult = function (event) {
-            const transcript = event.results[0][0].transcript;
-            voiceResult.textContent = 'Tu dijiste: ' + transcript;
-            ejecutarComando(transcript);
-        };
-
-        recognition.onerror = function (event) {
-            console.error('Error en el reconocimiento de voz: ' + event.error);
-        };
-
-        recognition.start(); // Iniciar el reconocimiento de voz
+        iniciarReconocimiento();
     } else {
         alert('El reconocimiento de voz no es compatible con tu navegador.');
     }
