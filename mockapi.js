@@ -3,6 +3,14 @@ document.addEventListener('DOMContentLoaded', function () {
     let openedWindow;
     let recognition;
 
+    const comandos = {
+        'página': () => window.open('https://www.google.com'),
+        'netflix': () => window.open('https://www.netflix.com'),
+        'imagen': () => window.open('https://upload.wikimedia.org/wikipedia/commons/thumb/5/58/Instituto_Tecnol%C3%B3gico_de_Pachuca._004.jpg/640px-Instituto_Tecnol%C3%B3gico_de_Pachuca._004.jpg'),
+        'cambiar el tamaño': cambiarTamaño,
+        'instrucciones': () => window.location.href = 'documentacion.html'
+    };
+
     function iniciarReconocimiento() {
         recognition = new webkitSpeechRecognition();
         recognition.lang = 'es-ES';
@@ -21,30 +29,24 @@ document.addEventListener('DOMContentLoaded', function () {
         recognition.start(); // Iniciar el reconocimiento de voz
     }
 
-    function ejecutarComando(comando) {
-        comando = comando.toLowerCase().trim();
-        switch (comando) {
-            case 'quiero abrir una página':
-                openedWindow = window.open('https://www.google.com');
+    function ejecutarComando(transcript) {
+        transcript = transcript.toLowerCase();
+        let ejecutado = false;
+        
+        // Buscar y ejecutar el primer comando que coincida
+        for (const [comando, funcion] of Object.entries(comandos)) {
+            if (transcript.includes(comando)) {
+                funcion();
+                enviarComandoAMockAPI(comando);
+                ejecutado = true;
                 break;
-            case 've a netflix':
-                openedWindow = window.open('https://www.netflix.com');
-                break;
-            case 'abre la imagen por favor':
-                openedWindow = window.open('https://upload.wikimedia.org/wikipedia/commons/thumb/5/58/Instituto_Tecnol%C3%B3gico_de_Pachuca._004.jpg/640px-Instituto_Tecnol%C3%B3gico_de_Pachuca._004.jpg');
-                break;
-            case 'quiero cambiar el tamaño':
-                cambiarTamaño();
-                break;
-            case 'quiero ver las instrucciones':
-                window.location.href = 'documentacion.html';
-                break;
-            default:    
-                mostrarError();
-                break;
+            }
         }
         
-        enviarComandoAMockAPI(comando);
+        if (!ejecutado) {
+            mostrarError();
+            enviarComandoAMockAPI(transcript); // Enviar la oración completa al MockAPI
+        }
     }
 
     function cambiarTamaño() {
@@ -60,7 +62,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function enviarComandoAMockAPI(comando) {
         const url = "https://660219919d7276a75552a2c5.mockapi.io/registro";
-        const data = { comando: comando };
+        const data = { 
+            comando: comando,
+            fecha: new Date().toLocaleString() // Fecha y hora local
+        };
 
         fetch(url, {
             method: 'POST',

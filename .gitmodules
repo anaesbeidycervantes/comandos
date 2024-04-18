@@ -1,0 +1,3 @@
+[submodule "app-ihc-remote"]
+	path = app-ihc-remote
+	url = .\\app-ihc-remote
