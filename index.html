@@ -1,151 +1,32 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Control de Navegador por Voz</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            background-color: #f4f4f4;
-            color: #333;
-        }
-
-        /* Estilos para el header */
-        header {
-            background-color: #b8cde3;
-            color: #000000;
-            padding: 20px 0;
-            text-align: center;
-            border-bottom: 4px solid #0056b3;
-            position: relative;
-        }
-
-        .header-image {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            max-width: 80px;
-            height: auto;
-            border-radius: 50%;
-        }
-
-        .header-title {
-            font-size: 2.5rem;
-            margin-top: 15px;
-        }
-
-        /* Estilos para el contenido principal */
-        main {
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-            margin-top: 30px;
-        }
-
-        /* Estilos para el footer */
-        footer {
-            background-color: #4d6385;
-            color: #fff;
-            padding: 15px 0;
-            text-align: center;
-        }
-
-        footer p {
-            margin-bottom: 0;
-        }
-    </style>
+    <title>app-ihc-remote</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 </head>
-
 <body>
-    <header>
+    <header class="navbar navbar-dark bg-dark">
         <div class="container">
-            <!-- Añadiendo la imagen en la esquina superior izquierda del header -->
-            <img src="grabadora-de-voz.gif" alt="Grabadora de Voz" class="img-fluid header-image">
-            <h1 class="header-title">Historial de las Órdenes de Comandos de Voz</h1>
+            <a class="navbar-brand" href="#">App remota de IHC</a>
         </div>
     </header>
 
-    <main class="container mt-4">
-        <label for="inputPassword5" class="form-label">   
-            <h2>Orden para ejecutar:</h2>
-        </label>
-        <div class="form-control" id="Orden">
-            <h5 id="OrdenText" style="font-size: 1.5rem; color: #333;"></h5>
+    <div class="container-fluid vh-100 bg-light">
+        <div class="row vh-100">
+            <div class="col-md-12 my-auto text-center">
+                <h1 id="text-modify">Orden recibida</h1>
+                <p id="orden">Orden</p>
+            </div>
         </div>
-    </main>
+    </div>
 
-    <footer class="mt-5">
-        <div class="container">
-            <p>Derechos Reservados &copy; Ana Esbeidy Cervantes Acosta</p>
-        </div>
+   
+    <footer class="text-center mt-5">
+        <p>Derechos Reservados &copy; Ana Esbeidy Cervantes Acosta</p>
     </footer>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const OrdenText = document.getElementById('OrdenText');
-            const ws = new WebSocket('ws://localhost:8080');
-
-            function obtenerUltimaOrden() {
-                const url = "https://660219919d7276a75552a2c5.mockapi.io/registro";
-
-                fetch(url)
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Error en la solicitud HTTP, estado ' + response.status);
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    if (data && data.length > 0) {
-                        const ultimaOrden = data[data.length - 1].comando;
-                        console.log('Última orden obtenida:', ultimaOrden);
-
-                        // Actualizar texto en index.html
-                        OrdenText.textContent = interpretarComando(ultimaOrden);
-
-                        // Enviar la última orden a través de WebSocket
-                        ws.addEventListener('open', function() {
-                            ws.send(ultimaOrden);
-                        });
-
-                        // Almacenar el último comando en el localStorage para compartir con pruebamockapi.html
-                        localStorage.setItem('lastVoiceCommand', ultimaOrden);
-
-                    } else {
-                        console.log('No hay órdenes registradas.');
-                        OrdenText.textContent = 'No hay órdenes registradas.';
-                    }
-                })
-                .catch(error => {
-                    console.error('Error al obtener órdenes:', error);
-                    OrdenText.textContent = 'Error al obtener órdenes.';
-                });
-            }
-
-            function interpretarComando(comando) {
-                return comando; // Retorna el comando tal como se recibió
-            }
-
-            // Obtener y mostrar la última orden al cargar la página
-            obtenerUltimaOrden();
-
-            // Actualizar automáticamente cada 5 segundos
-            setInterval(obtenerUltimaOrden, 1000);
-
-            // Escuchar cambios en el localStorage
-            window.addEventListener('storage', function(event) {
-                if (event.key === 'lastVoiceCommand') {
-                    const lastCommand = event.newValue;
-                    const OrdenText = document.getElementById('OrdenText');
-                    OrdenText.textContent = interpretarComando(lastCommand);
-                }
-            });
-        });
-    </script>
+    <script type="module" src="js/main.js"></script>
 </body>
-
 </html>
