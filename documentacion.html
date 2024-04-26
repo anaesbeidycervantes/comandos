@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manual de Usuario - Reconocimiento de Órdenes por Voz</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <style>
+        body {
+            background-color: #f5e6f9; /* Lila claro */
+        }
+        .navbar {
+            background-color: #6c4485; /* Lila oscuro */
+            color: #fff; /* Blanco */
+        }
+        .navbar-brand {
+            font-weight: bold;
+        }
+        footer {
+            background-color: #6c4485; /* Lila oscuro */
+            color: #fff; /* Blanco */
+            padding: 10px 0;
+            text-align: center;
+        }
+        .container {
+            max-width: 1200px;
+        }
+        .columna {
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container">
+        <a class="navbar-brand" href="#">Manual de Usuario - Reconocimiento de Órdenes por Voz</a>
+    </div>
+</nav>
+
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-6 columna">
+            <h3 class="mb-3">Introducción</h3>
+            <p>El sistema de reconocimiento de órdenes por voz permite controlar diversas acciones en el navegador utilizando comandos de voz simples. Este manual de usuario proporciona una guía detallada sobre cómo utilizar el sistema y los comandos disponibles.</p>
+
+            <h3 class="mt-5 mb-3">Cómo Usar</h3>
+            <p>Para utilizar el sistema de reconocimiento de órdenes por voz, sigue estos pasos:</p>
+            <ol>
+                <li>Abre el navegador web en tu dispositivo.</li>
+                <li>Dirígete a la página web del sistema.</li>
+                <li>Asegúrate de que el micrófono de tu dispositivo esté activado.</li>
+                <li>Una vez en la página web, espera a que aparezca la indicación para empezar a hablar.</li>
+                <li>Di uno de los comandos disponibles en voz alta y clara.</li>
+                <li>El sistema reconocerá tu comando y realizará la acción correspondiente.</li>
+            </ol>
+        </div>
+        <div class="col-md-6 columna">
+            <h3 class="mb-3">Comandos Disponibles</h3>
+            <p>Los siguientes son algunos de los comandos disponibles que puedes utilizar con el sistema de reconocimiento de órdenes por voz:</p>
+            <ul class="list-group">
+                <li class="list-group-item"><strong>abrir Google:</strong> Abre Google en una nueva pestaña del navegador.</li>
+                <li class="list-group-item"><strong>abrir Netflix:</strong> Abre Netflix en una nueva pestaña del navegador.</li>
+                <li class="list-group-item"><strong>instrucciones:</strong> Abre una nueva pestaña con el manual de usuario (este documento).</li>
+                <li class="list-group-item"><strong>buscar Morat:</strong> Realiza una búsqueda en el navegador con el término "Morat".</li>
+                <li class="list-group-item"><strong>buscar Pachuca:</strong> Realiza una búsqueda en el navegador con el término "Pachuca".</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<footer class="text-center mt-5">
+    <p>Derechos Reservados &copy; Ana Esbeidy Cervantes Acosta</p>
+</footer>
+
+<script>
+    const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+    recognition.lang = 'es-ES';
+    recognition.continuous = true;
+
+    recognition.onresult = function(event) {
+        const command = event.results[event.results.length - 1][0].transcript.trim().toLowerCase();
+        switch(command) {
+            case 'regresar al inicio':
+                window.location.href = 'pruebamokcapi.html';
+                break;
+        }
+    };
+
+    recognition.start();
+</script>
+
+</body>
+</html>
